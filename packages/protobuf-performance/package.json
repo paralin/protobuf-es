@@ -1,0 +1,19 @@
+{
+  "name": "protobuf-performance",
+  "version": "1.0.0",
+  "description": "",
+  "main": "protobufjs/index.js",
+  "scripts": {
+    "bench": "node index.js",
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "buf:generate": "buf generate"
+  },
+  "author": "",
+  "license": "ISC",
+  "type": "module",
+  "dependencies": {
+    "@bufbuild/protobuf": "^0.3.0",
+    "google-protobuf": "^3.21.2",
+    "protobufjs": "^7.1.2"
+  }
+}

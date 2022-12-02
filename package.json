@@ -8,6 +8,7 @@
     "./packages/protoplugin-example",
     "./packages/protobuf-test",
     "./packages/protobuf-conformance",
+    "./packages/protobuf-performance",
     "./packages/protobuf-bench",
     "./packages/protobuf-example"
   ],
@@ -20,6 +21,7 @@
   "devDependencies": {
     "@typescript-eslint/eslint-plugin": "^5.42.0",
     "@typescript-eslint/parser": "^5.42.0",
+    "benchmark": "^2.1.4",
     "eslint": "^8.26.0",
     "eslint-import-resolver-typescript": "^3.5.2",
     "eslint-plugin-import": "^2.26.0",
