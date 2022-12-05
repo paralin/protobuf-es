@@ -20,6 +20,7 @@ import {
 } from "@bufbuild/protoplugin/ecmascript";
 import { proto3, ScalarType } from "@bufbuild/protobuf";
 import { Configuration, ServiceStatus } from "./gen/proto/custom_options_pb.js";
+import { Person } from "./gen/proto/person_pb.js";
 
 describe("custom options", function () {
   const enumName = "example.EnumWithOptions";
@@ -239,5 +240,8 @@ describe("custom options", function () {
       const option = findCustomMessageOption(method, 50007, Configuration);
       expect(option?.unused).toEqual("");
     }
+
+    const p = new Person();
+    p.bigly["69n"] = "booshy";
   });
 });

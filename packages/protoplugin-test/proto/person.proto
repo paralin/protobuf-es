@@ -36,5 +36,7 @@ message Person {
   repeated PhoneNumber phones = 4;
 
   google.protobuf.Timestamp last_updated = 5;
+
+  map<int64, string> bigly = 6;
 }
 

@@ -51,6 +51,11 @@ export class Person extends Message<Person> {
    */
   lastUpdated?: Timestamp;
 
+  /**
+   * @generated from field: map<int64, string> bigly = 6;
+   */
+  bigly: { [key: string]: string } = {};
+
   constructor(data?: PartialMessage<Person>) {
     super();
     proto3.util.initPartial(data, this);
@@ -64,6 +69,7 @@ export class Person extends Message<Person> {
     { no: 3, name: "email", kind: "scalar", T: 9 /* ScalarType.STRING */ },
     { no: 4, name: "phones", kind: "message", T: Person_PhoneNumber, repeated: true },
     { no: 5, name: "last_updated", kind: "message", T: Timestamp },
+    { no: 6, name: "bigly", kind: "map", K: 3 /* ScalarType.INT64 */, V: {kind: "scalar", T: 9 /* ScalarType.STRING */} },
   ]);
 
   static fromBinary(bytes: Uint8Array, options?: Partial<BinaryReadOptions>): Person {
