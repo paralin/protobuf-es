@@ -24,33 +24,56 @@
 import { newSuite } from "./suite.js";
 import protobuf from "protobufjs";
 import { Test as ProtobufES_Test } from "./gen/protobuf-es/data/bench_pb.js";
-import { jsonData } from "./data/bench.js";
+import protobufJsUtf8 from "@protobufjs/utf8";
+import { BinaryReader, BinaryWriter } from "@bufbuild/protobuf";
 
 const ProtobufJS_Test = protobuf
   .loadSync("./data/bench.proto")
   .resolveAll()
   .lookup("Test");
 
-const Buffer_from =
-  (Buffer.from !== Uint8Array.from && Buffer.from) ||
-  function (value, encoding) {
-    return new Buffer(value, encoding);
-  };
+const testMessageCanonicalJson = {
+  string: "Lorem ipsum dolor sit amet.",
+  uint32: 9000,
+  inner: {
+    int32: 20161110,
+    innerInner: {
+      longField: "649545084044315",
+      enum: 1,
+      sint32: -42,
+    },
+  },
+  float: 0.25,
+};
+const testMessageProtobufES = ProtobufES_Test.fromJson(testMessageCanonicalJson);
+const testMessageProtobufJS = ProtobufJS_Test.fromObject(testMessageCanonicalJson);
+const testMessageBinary = testMessageProtobufES.toBinary();
 
-// const jsonBuf = Buffer_from(jsonStr, "utf8");
-const pbjsBuf = ProtobufJS_Test.encode(jsonData).finish();
-const pbjsMsg = ProtobufJS_Test.decode(pbjsBuf);
-
-// Get a buffer ready from protobuf-es
-const pbESMsg = ProtobufES_Test.fromJson(jsonData);
-const pbESBuf = pbESMsg.toBinary();
+const utf8 = {
+  decode(input) {
+    return protobufJsUtf8.read(input, 0, input.length);
+  },
+  encode(input) {
+    const b = new Uint8Array(protobufJsUtf8.length(input));
+    protobufJsUtf8.write(input, b, 0);
+    return b;
+  }
+};
+const pbESQuickBinaryOptions = {
+  readUnknownFields: false,
+  readerFactory: (bytes) => new BinaryReader(bytes, utf8),
+  writerFactory: () => new BinaryWriter(utf8),
+};
 
 newSuite("encoding (binary)")
   .add("protobuf.js", function () {
-    ProtobufJS_Test.encode(jsonData).finish();
+    ProtobufJS_Test.encode(testMessageProtobufJS).finish();
   })
   .add("protobuf-es", function () {
-    ProtobufES_Test.fromJson(jsonData).toBinary();
+    testMessageProtobufES.toBinary();
+  })
+  .add("protobuf-es Q", function () {
+    testMessageProtobufES.toBinary(pbESQuickBinaryOptions);
   })
   .run();
 
@@ -65,13 +88,13 @@ newSuite("encoding empty object (binary)")
 
 newSuite("encoding (json)")
   .add("protobuf.js", function () {
-    ProtobufJS_Test.toObject(pbjsMsg);
+    ProtobufJS_Test.toObject(testMessageProtobufJS);
   })
   .add("protobuf-es", function () {
-    pbESMsg.toJson();
+    testMessageProtobufES.toJson();
   })
   .add("protobuf-es (json string)", function () {
-    pbESMsg.toJsonString();
+    testMessageProtobufES.toJsonString();
   })
   .run();
 
@@ -89,27 +112,33 @@ newSuite("encoding empty object (json)")
 
 newSuite("decoding (binary)")
   .add("protobuf.js", function () {
-    ProtobufJS_Test.decode(pbjsBuf);
+    ProtobufJS_Test.decode(testMessageBinary);
   })
   .add("protobuf-es", function () {
-    ProtobufES_Test.fromBinary(pbESBuf);
+    ProtobufES_Test.fromBinary(testMessageBinary);
+  })
+  .add("protobuf-es Q", function () {
+    ProtobufES_Test.fromBinary(testMessageBinary, pbESQuickBinaryOptions);
   })
   .run();
 
 newSuite("decoding (json)")
   .add("protobuf.js", function () {
-    ProtobufJS_Test.fromObject(jsonData);
+    ProtobufJS_Test.fromObject(testMessageCanonicalJson);
   })
   .add("protobuf-es", function () {
-    ProtobufES_Test.fromJson(jsonData);
+    ProtobufES_Test.fromJson(testMessageCanonicalJson);
   })
   .run();
 
 newSuite("roundtrip")
   .add("protobuf.js", function () {
-    ProtobufJS_Test.decode(ProtobufJS_Test.encode(jsonData).finish());
+    ProtobufJS_Test.decode(ProtobufJS_Test.encode(testMessageProtobufJS).finish());
   })
   .add("protobuf-es", function () {
-    ProtobufES_Test.fromBinary(ProtobufES_Test.fromJson(jsonData).toBinary());
+    ProtobufES_Test.fromBinary(testMessageProtobufES.toBinary());
+  })
+  .add("protobuf-es Q", function () {
+    ProtobufES_Test.fromBinary(testMessageProtobufES.toBinary(pbESQuickBinaryOptions), pbESQuickBinaryOptions);
   })
   .run();
