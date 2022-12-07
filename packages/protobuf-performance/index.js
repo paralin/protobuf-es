@@ -30,13 +30,6 @@ const ProtobufJS_Test = protobuf
   .loadSync("./data/bench.proto")
   .resolveAll()
   .lookup("Test");
-// TODO
-//
-// 1.  The entire encoding suite is inside the protobufjs callback.  prob should only be done for protobufjs, but it
-// may not be a huge deal
-// 2.  the equivalent to protobuf-es would be the static class, but even so, doing it with root.lookup would be a
-// hindrance to protobufjs as it first has to look up and compile the file (but maybe not since we look it up prior
-// to the suite being run
 
 const Buffer_from =
   (Buffer.from !== Uint8Array.from && Buffer.from) ||

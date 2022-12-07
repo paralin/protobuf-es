@@ -81,7 +81,15 @@ switch (process.argv[2]) {
     }
     break;
   case "decode":
-    var buf = Test.encode(data).finish();
-    for (var j = 0; j < count; ++j) Test.decode(buf);
+    const msg = ProtobufES_Test.fromJson(jsonData);
+    const buf = msg.toBinary();
+    for (var i = 0; i < count; ++i) {
+      ProtobufES_Test.fromBinary(buf);
+    }
+    break;
+  case "fromjson":
+    for (var i = 0; i < count; ++i) {
+      ProtobufES_Test.fromJson(jsonData);
+    }
     break;
 }
