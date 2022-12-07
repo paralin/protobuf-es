@@ -93,9 +93,6 @@ newSuite("encoding (json)")
   .add("protobuf-es", function () {
     testMessageProtobufES.toJson();
   })
-  .add("protobuf-es (json string)", function () {
-    testMessageProtobufES.toJsonString();
-  })
   .run();
 
 newSuite("encoding empty object (json)")
@@ -104,9 +101,6 @@ newSuite("encoding empty object (json)")
   })
   .add("protobuf-es", function () {
     new ProtobufES_Test().toJson();
-  })
-  .add("protobuf-es (json string)", function () {
-    new ProtobufES_Test().toJsonString();
   })
   .run();
 
