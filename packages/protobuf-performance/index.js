@@ -61,6 +61,7 @@ const utf8 = {
 };
 const pbESQuickBinaryOptions = {
   readUnknownFields: false,
+  writeUnknownFields: false,
   readerFactory: (bytes) => new BinaryReader(bytes, utf8),
   writerFactory: () => new BinaryWriter(utf8),
 };
