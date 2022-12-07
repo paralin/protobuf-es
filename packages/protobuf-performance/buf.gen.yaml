@@ -7,6 +7,3 @@ plugins:
   - name: es
     opt: target=js
     out: gen/protobuf-es
-  - plugin: buf.build/protocolbuffers/js
-    opt: library=bench_pb,binary
-    out: gen/protobuf-javascript
