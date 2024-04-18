@@ -36,6 +36,8 @@ message User {
 And it is compiled to an ECMAScript class that can be used like this:
 
 ```typescript
+import { User } from "./gen/user_pb.js";
+
 let user = new User({
   firstName: "Homer",
   lastName: "Simpson",
@@ -52,6 +54,30 @@ const bytes = user.toBinary();
 user = User.fromBinary(bytes);
 user = User.fromJsonString('{"firstName": "Homer", "lastName": "Simpson"}');
 ```
+
+---
+
+```typescript
+import { create, toBinary, fromBinary, fromJsonString } from "@bufbuild/protobuf";
+import { UserDesc } from "./gen/user_pb.js";
+
+let user = create(UserDesc, {
+  firstName: "Homer",
+  lastName: "Simpson",
+  active: true,
+  locations: ["Springfield"],
+  projects: { SPP: "Springfield Power Plant" },
+  manager: {
+    firstName: "Montgomery",
+    lastName: "Burns",
+  },
+});
+
+const bytes = toBinary(UserDesc, user);
+user = fromBinary(UserDesc, bytes);
+user = fromJsonString(UserDesc, '{"firstName": "Homer", "lastName": "Simpson"}');
+```
+
 
 The benefits can extend to any application that interacts with yours as well.  This is because the Protobuf file above can be used to generate types in many languages.  The added bonus is that no one has to write any boilerplate code to make this happen.  [Code generators](https://www.npmjs.com/package/@bufbuild/protoc-gen-es) handle all of this for you.
 
